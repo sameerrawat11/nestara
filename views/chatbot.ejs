@@ -1,0 +1,137 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+#chatbot-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #fe424d;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 26px;
+  border: none;
+  cursor: pointer;
+  z-index: 999;
+}
+
+#chatbot-box {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 300px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 999;
+}
+
+#chatbot-header {
+  background: #fe424d;
+  color: white;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+  font-weight: bold;
+}
+
+#chatbot-body {
+  padding: 10px;
+  height: 200px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+#chatbot-input {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+#chatbot-input input {
+  flex: 1;
+  border: none;
+  padding: 8px;
+}
+
+#chatbot-input button {
+  background: #fe424d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+}
+.dark {
+  background: #1e1e1e !important;
+  color: white !important;
+}
+
+.dark #chatbot-box {
+  background: #2c2c2c;
+}
+
+#darkToggle {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
+}
+
+</style>
+
+<button id="chatbot-btn">💬</button>
+
+<div id="chatbot-box">
+  <div id="chatbot-header">
+  Nestara Chatbot 🤖
+  <span id="darkToggle">🌙</span>
+</div>
+
+ <div id="chatbot-body">
+  <% if (history && history.length) { %>
+    <% history.forEach(chat => { %>
+      <div><b>You:</b> <%= chat.user %></div>
+      <div><b>Bot:</b> <%= chat.bot %></div>
+    <% }) %>
+  <% } else { %>
+    <div><b>Bot:</b> Hello 👋 Ask me anything about Nestara.</div>
+  <% } %>
+</div>
+
+  <div id="chatbot-input">
+    <input id="msg" placeholder="Type here..." />
+    <button onclick="sendMsg()">Send</button>
+  </div>
+</div>
+
+<script>
+const btn = document.getElementById("chatbot-btn");
+const box = document.getElementById("chatbot-box");
+const body = document.getElementById("chatbot-body");
+
+btn.onclick = () => {
+  box.style.display = box.style.display === "none" ? "block" : "none";
+};
+
+async function sendMsg() {
+  const input = document.getElementById("msg");
+  const message = input.value;
+  if (!message.trim()) return;
+
+  body.innerHTML += `<div><b>You:</b> ${message}</div>`;
+  input.value = "";
+
+  const res = await fetch("/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message })
+  });
+
+  const data = await res.json();
+  body.innerHTML += `<div><b>Bot:</b> ${data.reply}</div>`;
+  body.scrollTop = body.scrollHeight;
+}
+document.getElementById("darkToggle").onclick = () => {
+  document.getElementById("chatbot-box").classList.toggle("dark");
+};
+
+</script>

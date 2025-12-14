@@ -1,0 +1,131 @@
+<style>
+.nav-link:hover{
+  color: #fe424d;
+}
+
+.navbar-brand{
+  font-size: larger;
+  margin-left: 25px;
+}
+
+
+.search-btn{
+  color: #fe424d;
+  border: 1px solid #fe424d;
+  border-radius: 25px;
+  padding: 0 1rem 0 1rem;
+  background: transparent;
+  cursor: pointer;
+}
+.search-btn:hover{
+  background-color: #fe424d;
+  color: white;
+}
+
+.search-btn i{
+  display: inline;
+  margin-right: 0.5rem;
+}
+.srch-ip{
+  border-radius: 25px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  min-width: 140px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+@media (min-width: 992px) {
+  .srch-ip { padding: 0.5rem 3rem; min-width: 240px; }
+}
+
+@media (max-width: 767px) {
+  .navbar .nav-link { padding: .35rem .5rem; font-size: .95rem; }
+}
+</style>
+
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/listings">
+      <i class="fa-solid fa-ship"></i>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings" style="color: #fe424d;">
+          Explore top locations on Nestara
+        </a>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="navbar-nav ms-auto">
+        <form class="d-flex" role="search" onsubmit="return false;">
+          <input
+            id="searchInput"
+            class="form-control me-2 srch-ip"
+            type="search"
+            placeholder="Search Destinations"
+          />
+          <button
+            id="searchBtn"
+            class="btn search-btn"
+            type="button"
+          >
+            <i class="fa-solid fa-magnifying-glass"></i>Search
+          </button>
+        </form>
+      </div>
+
+      <!-- AUTH LINKS -->
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/listings/new">
+          <i class="fa-solid fa-ship" style="color:black;"></i>&nbsp;&nbsp;Nestara your home
+        </a>
+
+        <% if (typeof currUser === "undefined" || !currUser) { %>
+          <a class="nav-link" href="/signup">
+            <i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;<b>Signup</b>
+          </a>
+          <a class="nav-link" href="/accessacc">
+            <i class="fa-solid fa-user"></i>&nbsp;&nbsp;<b>Login</b>
+          </a>
+        <% } else { %>
+          <a class="nav-link" href="/logout">
+            <b>Logout</b>&nbsp;&nbsp;
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+(function(){
+  try {
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    if (!searchInput) return;
+
+    searchInput.addEventListener('keydown', function(e){
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const ev = new Event('input', { bubbles: true });
+        searchInput.dispatchEvent(ev);
+      }
+    });
+
+    if (searchBtn) {
+      searchBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        const ev = new Event('input', { bubbles: true });
+        searchInput.dispatchEvent(ev);
+        searchInput.focus();
+      });
+    }
+  } catch(e) {}
+})();
+</script>

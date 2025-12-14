@@ -1,0 +1,122 @@
+<% layout("/layouts/boilerplate") %>
+<script>
+  const mapToken = "<%=process.env.MAP_TOKEN%>"
+ const listing = <%- JSON.stringify(listing)%>;
+
+</script>
+<!-- if your layout already includes partials/map-assets, remove this line.
+     Otherwise keep it (but don't include Leaflet twice). -->
+
+<div class="row mt-3">
+  <div class="col-8 offset-3">
+    <h3><%= listing.title %></h3>
+  </div>
+
+  <div class="card col-6 offset-3 show-card listing-card">
+    <img
+      src="<%= listing.image && listing.image.url ? listing.image.url : listing.image %>"
+      class="card-img-top show-img"
+      alt="listingimg"
+      onerror="this.style.display='none'"
+    />
+    <div class="card-body">
+      <p class="card-text"><i>Owned by <%= listing.owner ? listing.owner.username : "Unknown" %></i></p>
+      <p class="card-text"><%= listing.description %></p>
+      <p class="card-text">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %></p>
+      <p class="card-text"><%= listing.location || "" %></p>
+      <p class="card-text"><%= listing.country || "" %></p>
+    </div>
+  </div>
+</div>
+
+<br>
+
+<% if (isOwner) { %>
+  <div class="btns">
+    <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-2 offset-2 edit-btn" style="align-items: center;"><i class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Edit</a>
+    <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" >
+      <button class="btn btn-dark offset-5"><i class="fa-solid fa-circle-minus"></i>&nbsp;&nbsp;Delete</button>
+    </form>
+  </div>
+<% } %>
+
+<div class="col-8 offset-2 mb-3">
+  <% if (currUser) { %>
+    <hr>
+    <h4>Leave your Reviews</h4>
+    <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
+      <div class="mb-3 mt-3">
+        <label for="rating" class="form-label">Rating</label>
+        <fieldset class="starability-slot">
+          <input type="radio" id="first-rate1" name="review[rating]" value="1" checked />
+          <label for="first-rate1" title="Terrible">1 star</label>
+          <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+          <label for="first-rate2" title="Not good">2 stars</label>
+          <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+          <label for="first-rate3" title="Average">3 stars</label>
+          <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+          <label for="first-rate4" title="Very good">4 stars</label>
+          <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+          <label for="first-rate5" title="Amazing">5 stars</label>
+        </fieldset>
+      </div>
+
+      <div class="mb-3 mt-3">
+        <label for="comment" class="form-label">Comments</label>
+        <textarea name="review[comment]" required class="form-control" id="comment" cols="30" rows="4"></textarea>
+        <div class="invalid-feedback">Please leave a comment</div>
+      </div>
+      <button class="btn btn-outline-dark"><i class="fa-solid fa-circle-check"></i>&nbsp;&nbsp;Submit</button>
+    </form>      
+
+  <% } %><hr class="center-hr">
+</div>
+
+ <!-- <div class="col-6 offset-3 mb-3">
+  <h3>Where you'll be</h3>
+  <div id="map" style="height: 400px;"></div>
+</div>
+
+<script src="/js/map.js"></script> -->
+
+<!-- MAP: set globals first, then load Mapbox and your map script -->
+ <p style="font-size: x-large; font-weight: 600;text-align: center;">Discover where this place is located&nbsp;&nbsp;<i class="fa-solid fa-map"></i></p>
+<div id="map" style="height: 300px; width: 80rem; "></div>
+
+<script>
+  // inject server token and coords before loading map.js
+  window.MAP_TOKEN = "<%= MAP_TOKEN %>";
+  // pass coords or null
+  window.LISTING_COORDS = <%- JSON.stringify(
+    (typeof listing !== 'undefined' && listing.geometry && listing.geometry.coordinates)
+      ? listing.geometry.coordinates
+      : null
+  ) %>;
+
+  console.log('DEBUG MAP_TOKEN ->', !!window.MAP_TOKEN, 'DEBUG LISTING_COORDS ->', window.LISTING_COORDS);
+</script>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.17.0/mapbox-gl.js"></script>
+<script src="/js/map.js"></script>
+
+<% if (listing.reviews && listing.reviews.length > 0) { %>
+  <div class="row">
+    <div class="col-12" style="font-size: x-large;"><p><b>All Reviews</b></p></div>
+    <% for (let review of listing.reviews) { %>
+      <div class="card col-3 ms-3 mb-3">
+ <div class="card-body ">
+     <h5 class="card-title">@<%= review.author && review.author.username ? review.author.username : "User" %></h5>
+          <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+          <p class="card-text"><%= review.comment %></p>
+        </div>
+        <% if (currUser && review.author && String(currUser._id) === String(review.author._id)) { %>
+          <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" class="mb-3">
+            <button class="btn btn-sm btn-dark">Delete</button>
+          </form>
+        <% } %>
+      </div>
+    <% } %>
+   
+  </div>
+  
+<% } %>

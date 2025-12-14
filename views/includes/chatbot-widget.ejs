@@ -1,0 +1,125 @@
+<style>
+#chatbot-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #fe424d;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 26px;
+  border: none;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+#chatbot-box {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 300px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 9999;
+}
+
+#chatbot-header {
+  background: #fe424d;
+  color: white;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+  font-weight: bold;
+}
+
+#chatbot-body {
+  padding: 10px;
+  height: 200px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+#chatbot-input {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+#chatbot-input input {
+  flex: 1;
+  border: none;
+  padding: 8px;
+}
+
+#chatbot-input button {
+  background: #fe424d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+}
+</style>
+
+<button id="chatbot-btn">💬</button>
+
+<div id="chatbot-box">
+  <div id="chatbot-header">Nestara Chatbot 🤖</div>
+  <div id="chatbot-body">
+    <div><b>Bot:</b> Hello 👋 Ask me anything about Nestara.</div>
+  </div>
+  <div id="chatbot-input">
+    <input id="chatbot-msg" placeholder="Type here..." />
+    <button onclick="sendChat()">Send</button>
+  </div>
+</div>
+
+<script>
+
+const btn = document.getElementById("chatbot-btn");
+const box = document.getElementById("chatbot-box");
+const body = document.getElementById("chatbot-body");
+
+btn.addEventListener("click", () => {
+  box.style.display = box.style.display === "none" ? "block" : "none";
+});
+
+async function sendChat() {
+  const input = document.getElementById("chatbot-msg");
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  // show user message
+  body.innerHTML += `<div><b>You:</b> ${message}</div>`;
+  input.value = "";
+
+  // thinking indicator
+  const thinkingId = "thinking-" + Date.now();
+  body.innerHTML += `<div id="${thinkingId}"><b>Bot:</b> typing...</div>`;
+  body.scrollTop = body.scrollHeight;
+
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await res.json();
+
+    // remove thinking
+    document.getElementById(thinkingId).remove();
+
+    // show bot reply
+    body.innerHTML += `<div><b>Bot:</b> ${data.reply}</div>`;
+    body.scrollTop = body.scrollHeight;
+
+  } catch (err) {
+    console.error("Chatbot error:", err);
+
+    document.getElementById(thinkingId).innerHTML =
+      "<b>Bot:</b> Sorry, something went wrong.";
+  }
+}
+
+</script>

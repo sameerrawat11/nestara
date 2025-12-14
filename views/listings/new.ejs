@@ -1,0 +1,49 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row">
+  <div class="col-8 offset-2"><br><br>
+    <div class="listing-form-container">
+    <h2 class="listing-title">Create a New Listing</h2><br>
+
+    <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
+      <!-- title, desc, image etc -->
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input name="listing[title]" placeholder="enter the Title" type="text" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="listing[description]" placeholder="enter the Description" class="form-control" required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="image" class="form-label">Upload Listing Image</label>
+        <input name="listing[image]" class="form-control" type="file" required>
+      </div>
+
+      <div class="row">
+        <div class="mb-3 col-md-4">
+          <label for="price" class="form-label">Price</label>
+          <input name="listing[price]" class="form-control" required>
+        </div>
+
+        <div class="mb-3 col-md-8">
+          <label for="Country" class="form-label">Country</label>
+          <input name="listing[country]" class="form-control" placeholder="enter the Country" type="text" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="Location" class="form-label">Location (address)</label>
+        <input id="search-address" name="listing[location]" placeholder="Search address or type location" class="form-control" type="text" required>
+        <ul id="search-results" class="list-group mt-1"></ul>
+      </div>
+
+     
+
+      <button class="btn btn-dark add-btn mt-3">Add</button>
+    </form>
+  </div>
+</div></div>
+<script src="/js/map.js"></script>

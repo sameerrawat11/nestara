@@ -1,0 +1,584 @@
+/* =========================
+   style.css - responsive + improvements
+   Replace your current style.css with this content
+   ========================= */
+
+   /* Layout helpers to keep footer at bottom (apply globally) */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.site-wrapper {
+  min-height: 100vh;      /* fill viewport */
+  display: flex;
+  flex-direction: column;
+}
+
+.site-main {
+  flex: 1 0 auto;         /* expand to push footer down */
+}
+
+/* Ensure footer sits after content and doesn't overlap */
+.site-footer {
+  flex-shrink: 0;
+  width: 100%;
+  position: relative;     /* avoid fixed/absolute overlap */
+}
+
+/* Small visual spacing before footer */
+.site-main + .site-footer {
+  margin-top: 1rem;
+}
+
+/* Optional: make footer responsive if you want slightly different styling on small screens */
+@media (max-width: 576px) {
+  .site-main + .site-footer {
+    margin-top: 0.5rem;
+  }
+}
+
+/* --- Basic reset / box sizing --- */
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; color: #222; background: #fff; }
+
+/* Ensure container stretches to footer */
+.container{ flex: 1; }
+
+/* =========================
+   NAVBAR & SEARCH (keeps your look)
+   ========================= */
+.navbar {
+  height: 5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  background-color: white;
+}
+.fa-ship { color: #fe424d; font-size: 2rem; }
+
+/* Search button / input */
+.search-btn{
+  color: #fe424d;
+  border: 1px solid #fe424d;
+  border-radius: 25px;
+  padding: 0 1rem;
+  background: transparent;
+  cursor: pointer;
+}
+.search-btn:hover{ background-color: #fe424d; color: white; }
+.search-btn i{ display: inline; margin-right: 0.5rem; }
+
+.srch-ip{
+  border-radius: 25px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  min-width: 140px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+@media (min-width: 992px) {
+  .srch-ip { padding: 0.5rem 3rem; min-width: 240px; }
+}
+@media (max-width: 767px) {
+  .navbar-nav.ms-auto { margin-left: .5rem; }
+  .navbar .nav-link { padding: .35rem .5rem; font-size: .95rem; }
+}
+
+/* =========================
+   FOOTER (kept your original styles)
+   ========================= */
+.f-info-links a { color: #222222; text-decoration: none; }
+.f-info-links a:hover { color: #fe424d; }
+.f-info-links, .f-info-socials, .f-info-brand { width: 100%; display: flex; align-items: center; justify-content: center; }
+.f-info-socials i { margin-right: 1rem; font-size: 1.2rem; }
+.f-info { height: 8rem; background-color: #ebebeb; display: flex; text-align: center; flex-wrap: wrap; justify-content: center; align-items: space-evenly; }
+
+/* =========================
+   CARD & LISTING STYLES
+   (image object-fit + spacing)
+   ========================= */
+.card-img-top {
+  border-radius: 0.5rem;
+  width: 100% !important;
+  object-fit: cover !important;
+  height: 18rem;
+}
+@media (max-width: 992px) { .card-img-top { height: 14.5rem; } }
+@media (max-width: 576px) { .card-img-top { height: 10.5rem; } }
+
+.card-body { padding: 0 !important; }
+.card-text p { font-weight: 700 !important; }
+.listing-link { text-decoration: none; color: inherit; }
+.card-img-overlay { opacity: 0; transition: opacity .12s ease;width: 10px; }
+.card-img-overlay:hover { opacity: 0.12; background-color: white; }
+
+.listing-card { flex: 0 0 100%; border:none !important; margin-bottom: 1rem;}
+.btns{ display: flex; }
+.show-card{ padding-left: 0; padding-right: 0; }
+
+/* show image on detail page */
+.show-img{ height: 30vh; }
+.center-hr {
+    width: 70%;
+    margin: 2rem auto !important;   /* Center properly */
+    border: 0;
+    border-top: 2px solid #ddd;
+    opacity: 0.6;
+}
+
+
+#map {
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 10px;
+  border: 1px solid #fe424d !important;
+  border-radius: 25px;
+
+}
+
+.btn{
+  border: 1px solid #fe424d !important;
+  background-color: white !important;
+  color: #fe424d !important;
+  border-radius: 100px !important;
+  width: 150px !important;
+}
+
+.btn:hover{
+    background-color: #fe424d !important;
+
+    color: white !important;
+
+}
+
+/* make card smaller shadow & subtle hover */
+ .card { border: 1px solid rgba(0,0,0,0.06); border-radius: .35rem; transition: transform .12s ease, box-shadow .12s ease; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); } 
+
+/* body/link sizing */
+.nav-link { font-size: 1.2rem; margin-left: 1rem; color: #222222 !important; }
+
+/* =========================
+   LISTING META (title, price, location)
+   ========================= */
+.listing-meta { word-break: break-word; margin: 0; color: #222; padding: .6rem; }
+.listing-title { font-size: 1.02rem; display:block; color:#111; }
+.listing-price { font-weight:700; color:#111; margin-top: 0.25rem; display:inline-block; }
+.listing-location { font-size:0.9rem; color:#555; margin-top: 0.35rem; }
+
+/* small screen text */
+@media (max-width: 576px) {
+  .listing-title { font-size: 0.98rem; }
+  .listing-price { font-size: 0.95rem; }
+}
+
+/* =========================
+   RESULTS / GRID RESPONSIVE
+   ========================= */
+#resultsContainer { margin-top: 0.5rem; }
+@media (max-width: 576px) {
+  .row-cols-sm-1 > .col { padding-left: 0.35rem; padding-right: 0.35rem; }
+  .container, main.container { padding-left: 0.5rem; padding-right: 0.5rem; }
+}
+
+/* =========================
+   FILTER BAR RESPONSIVE
+   ========================= */
+#filters {
+  display:flex; flex-wrap: wrap; gap:0.5rem; padding: 0.35rem 0;
+}
+#filters .filter { min-width: 72px; text-align:center; }
+
+/* tax toggle */
+.tax-toggle { border: 1px solid #fe424d; border-radius: 1rem; padding: 0.6rem 0.9rem; display:flex; align-items:center; margin-left:auto; }
+@media (max-width: 768px) { .tax-toggle { margin-left:0; width:100%; justify-content:flex-start; } }
+
+/* no results */
+.no-results { display:none; text-align:center; padding:1.5rem 1rem; color:#666; font-size:1rem; }
+
+/* small utilities & accessibility */
+.hidden { display: none !important; }
+.center { text-align: center; }
+input:focus, button:focus, .filter:focus { outline: 3px solid rgba(254,66,77,0.12); outline-offset: 2px; }
+
+/* very small phones adjustments */
+@media (max-width: 360px) {
+  .srch-ip { font-size: 0.95rem; padding-left: 0.9rem; padding-right: 0.9rem; }
+  .search-btn i { margin-right: 0.35rem; }
+  #filters .filter p { display: none; }
+}
+
+/* =========================
+   End of style.css
+   ========================= */
+
+   /* ------------------------------------------------------
+   Beautiful Modern Auth Page Styling (No HTML changes)
+-------------------------------------------------------*/
+
+.auth-page {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(180deg, rgba(254,66,77,0.05), rgba(255,255,255,0));
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 700px;
+  background: #fff;
+  padding: 2rem 2.3rem;
+  border-radius: 14px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.auth-box h1 {
+  /* font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  font-size:large;
+  display: flex;
+  text-align: center;
+  margin-bottom: 1rem; */
+ font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.2rem;
+
+  /* THIS FIX MAKES IT ONE LINE */
+  white-space: nowrap;}
+
+.auth-box p.sub-text {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 1.8rem;
+}
+
+.auth-box .form-control {
+  height: 48px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.15);
+  padding-left: 42px;
+  transition: all .15s ease;
+}
+.ls{
+  color: #fe424d;
+}
+
+.auth-box .form-control:focus {
+  border-color: #fe424d;
+  box-shadow: 0 4px 14px rgba(254,66,77,0.15);
+}
+
+.auth-input-wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.auth-input-wrapper i {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: #757575;
+  font-size: 1rem;
+}
+
+/* Show/hide password button */
+.pwd-toggle {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #757575;
+  font-size: 1rem;
+}
+
+.btn-auth {
+  background: #fe424d;
+  border: none;
+  color: #fff;
+  width: 100%;
+  height: 48px;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  box-shadow: 0 6px 18px rgba(254,66,77,0.15);
+  transition: all .15s ease;
+}
+
+.btn-auth:hover {
+  background: #e93b45;
+  box-shadow: 0 10px 24px rgba(254,66,77,0.2);
+}
+
+.auth-bottom-text {
+  margin-top: 1rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.auth-bottom-text a {
+  color: #fe424d;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-bottom-text a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media(max-width: 480px){
+  .auth-box {
+    padding: 1.4rem 1.4rem;
+    border-radius: 12px;
+  }
+  .auth-box h1 {
+    font-size: 1.6rem;
+  }
+}
+
+
+/* 🧊 Glassmorphism card */
+.listing-form-container {
+    max-width: 750px;
+    margin: 3rem auto;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    padding: 2.8rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(254, 66, 77, 0.15);
+    border: 1px solid rgba(254,66,77,0.20);
+}
+
+/* 🌟 Title styling */
+.listing-title {
+    text-align: center;
+    font-size: 2.3rem;
+    font-weight: 800;
+    color: #fe424d;
+    letter-spacing: 0.8px;
+    text-shadow: 0px 2px 8px rgba(254,66,77,0.2);
+    margin-bottom: 2.2rem;
+}
+
+/* 🧩 Labels */
+.listing-form-container label {
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 0.4rem;
+}
+
+/* 🎨 Inputs with red glow effect */
+.listing-form-container input,
+.listing-form-container textarea,
+.listing-form-container select {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border: 1px solid #ffc5c8;
+    border-radius: 12px;
+    background: #fff;
+    font-size: 1rem;
+    transition: all 0.25s ease;
+}
+
+.listing-form-container input:focus,
+.listing-form-container textarea:focus {
+    outline: none;
+    border-color: #fe424d;
+    box-shadow: 0 0 8px rgba(254, 66, 77, 0.35);
+}
+
+/* 🟥 Cute red pill button */
+.btn-add {
+    background: #fe424d;
+    padding: 0.75rem 1.9rem;
+    font-size: 1.05rem;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    margin-top: 1rem;
+    box-shadow: 0 5px 18px rgba(254, 66, 77, 0.25);
+    transition: 0.25s ease;
+}
+/* Search bar outer white container fix */
+.navbar form.d-flex {
+  padding: 4px !important;          /* pehle zyada hogi */
+  border-radius: 24px !important;   /* curve kam */
+  box-shadow: none !important;      /* white glow remove */
+  background: transparent !important;
+}
+
+/* Input inner border control */
+.srch-ip {
+  border-radius: 18px !important;
+}
+
+/* Focus ring (blue/red) thin */
+.srch-ip:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 1px rgba(254, 66, 77, 0.35) !important;
+}
+
+
+.btn-add:hover {
+    background: #e53945;
+    box-shadow: 0 8px 25px rgba(254, 66, 77, 0.4);
+    transform: translateY(-3px);
+}
+
+/* 🔻 Button click effect */
+.btn-add:active {
+    transform: scale(0.95);
+}
+
+/* 📱 RESPONSIVE Styling */
+@media(max-width: 600px) {
+    .listing-form-container {
+        padding: 1.8rem;
+        margin: 1rem;
+    }
+
+    .listing-title {
+        font-size: 1.8rem;
+    }
+}
+/* ===============================
+   REVIEWS FORM (AIRBNB STYLE)
+   =============================== */
+
+/* form {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+  max-width: 900px;
+} */
+
+/* Stars spacing */
+form .starability-slot {
+  margin-bottom: 16px;
+}
+
+/* Textarea */
+form textarea.form-control {
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 0.95rem;
+  box-shadow: inset 0 0 0 rgba(0,0,0,0);
+}
+
+/* Submit button */
+form button.btn {
+  border-radius: 30px;
+  padding: 10px 26px;
+  font-size: 0.9rem;
+}
+
+/* ===============================
+   MAP SECTION
+   =============================== */
+
+#map {
+  border-radius: 24px;
+  border: #fe424d;
+  margin: 30px 0;
+  overflow: hidden;
+}
+
+/* ===============================
+   REVIEWS CARDS
+   =============================== */
+
+.card.mb-3 {
+  border: none !important;
+  border-radius: 20px !important;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.12);
+  padding: 8px;
+  transition: transform 0.3s ease;
+}
+
+/* Hover effect */
+.card.mb-3:hover {
+  transform: translateY(-4px);
+}
+
+/* Review username */
+.card-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* Review text */
+.card-text {
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Delete button */
+.card.mb-3 .btn-danger {
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.75rem;
+}
+
+/* =========================
+   FOOTER – AIRBNB STYLE
+   ========================= */
+
+.site-footer {
+  background: #f7f7f7;
+ padding: 25px 0 20px;
+} 
+
+.footer-title {
+  font-weight: 600;
+  font-size: larger;
+  margin-bottom: 12px;
+}
+
+.footer-text {
+  color: #666;
+  font-size: medium;
+  max-width: 260px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+  color: #fe424d;
+}
+
+.footer-socials i {
+  font-size: 18px;
+  margin-right: 12px;
+  cursor: pointer;
+  color: #555;
+}
+
+.footer-socials i:hover {
+  color: #fe424d;
+}
+
+.footer-bottom {
+  font-size: 0.85rem;
+  color: #777;
+}

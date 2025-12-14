@@ -1,0 +1,403 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+   /* ===== layout helpers ===== */
+  .page-inner { max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
+
+  /* ===== Filters area ===== */
+  #filters-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    width: 100%;
+  }
+
+  /* filters row (scrollable on small screens) */
+  #filters {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.25rem;
+  }
+
+  /* each filter button */
+  .filter{
+    text-align: center;
+    margin-top: 15px;
+    margin-right: 0;
+    opacity: 0.95;
+    min-width: 72px;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    transition: background .12s ease, transform .12s ease;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    background: transparent;
+    flex: 0 0 auto;
+  }
+  .filter:hover{ transform: translateY(-3px); }
+  .filter p { font-size: 0.78rem; margin:0; color: #333; }
+  .filter .icn { font-size: 1.05rem; color: #333; }
+
+  /* active visual */
+  .filter.active{
+    background: rgba(254,66,77,0.08);
+    border: 1px solid rgba(254,66,77,0.18);
+  }
+  .filter.active .icn { color: #fe424d; }
+
+  /* small screens: hide labels if super narrow */
+  @media (max-width: 340px) {
+    .filter p { display: none; }
+  }
+
+  /* ===== Tax toggle (separate block, right aligned on desktop) ===== */
+  .tax-block {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+    min-width: 220px;
+  }
+  .tax-toggle{
+    margin-top: 15px;
+    border: 1px solid #fe424d;
+    border-radius: 1rem;
+    padding: 0.6rem 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    gap: .5rem;
+    flex-shrink: 0;
+    background: #fff;
+  }
+  @media (max-width: 768px) {
+    /* On small screens, stack filters and toggle */
+    #filters-wrap { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .tax-block { width: 100%; justify-content: flex-start; }
+    .tax-toggle { width: 100%; }
+  }
+
+  /* ===== Results grid & cards ===== */
+  #resultsContainer { margin-top: 0.75rem; }
+  .listing-link { display: block; width: 100%; text-decoration: none; color: inherit; }
+  .card { border: 1px solid rgba(0,0,0,0.06); border-radius: .35rem; overflow: hidden; transition: transform .12s ease, box-shadow .12s ease; height: 100%; background: #fff; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+
+  .card-img-top {
+    width: 100%;
+    height: 18rem;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  @media (max-width: 992px) { .card-img-top { height: 14.5rem; } }
+  @media (max-width: 576px) { .card-img-top { height: 10.5rem; } }
+
+  .card-body { padding: 0.6rem; display: flex; flex-direction: column; min-height: 6.5rem; }
+  .listing-title { font-size: 1.02rem; color: #111; margin-bottom: .35rem; }
+  .listing-price { font-weight: 700; color: #111; }
+  .listing-location { font-size: 0.9rem; color: #555; margin-top: 0.25rem; }
+
+  /* small screens spacing */
+  @media (max-width: 420px) {
+    .page-inner { padding: 0 0.5rem; }
+  }
+
+  /* no results */
+  .no-results { text-align: center; padding: 2rem 1rem; color: #666; display: none; }
+
+  /* accessibility focus */
+  .filter:focus { outline: 3px solid rgba(254,66,77,0.12); outline-offset: 2px; } 
+
+
+</style>
+
+<div class="page-inner">
+  <!-- Filters row (filters + separate tax toggle) -->
+  <div id="filters-wrap" role="region" aria-label="Search filters and controls">
+    <div id="filters" aria-label="Listing filters">
+      <div class="filter" data-filter="trending" role="button" tabindex="0"><div><i class="fa-brands fa-firefox-browser icn"></i></div><p>Trending</p></div>
+      <div class="filter" data-filter="rooms" role="button" tabindex="0"><div><i class="fa-solid fa-bed icn"></i></div><p>Rooms</p></div>
+      <div class="filter" data-filter="iconic" role="button" tabindex="0"><div><i class="fa-solid fa-mountain-city icn"></i></div><p>Iconic City</p></div>
+      <div class="filter" data-filter="mountains" role="button" tabindex="0"><div><i class="fa-solid fa-mountain icn"></i></div><p>Mountains</p></div>
+      <div class="filter" data-filter="castles" role="button" tabindex="0"><div><i class="fa-brands fa-fort-awesome icn"></i></div><p>Castles</p></div>
+      <div class="filter" data-filter="pools" role="button" tabindex="0"><div><i class="fa-solid fa-water-ladder icn"></i></div><p>Amazing Pools</p></div>
+      <div class="filter" data-filter="camping" role="button" tabindex="0"><div><i class="fa-brands fa-free-code-camp icn"></i></div><p>Camping</p></div>
+      <div class="filter" data-filter="farms" role="button" tabindex="0"><div><i class="fa-solid fa-tractor icn"></i></div><p>Farms</p></div>
+      <div class="filter" data-filter="arctic" role="button" tabindex="0"><div><i class="fa-solid fa-snowman icn"></i></div><p>Arctic</p></div>
+      <div class="filter" data-filter="domes" role="button" tabindex="0"><div><i class="fa-solid fa-landmark-dome icn"></i></div><p>Domes</p></div>
+      <div class="filter" data-filter="boats" role="button" tabindex="0"><div><i class="fa-solid fa-sailboat icn"></i></div><p>Boats</p></div>
+    </div>
+
+    <div class="tax-block">
+      <div class="tax-toggle" role="group" aria-label="Tax toggle">
+        <div class="form-check-reverse form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" style="color: #fe424d; background-color: #fe424d;">
+          <label class="form-check-label" for="switchCheckDefault">Display total after Taxes</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results grid -->
+  <div id="resultsContainer" class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3 g-3" aria-live="polite">
+    <% for (let listing of allListings) { %>
+      <div class="col">
+        <a href="/listings/<%= listing._id %>"
+           class="listing-link"
+           data-title="<%= (listing.title || '').replace(/"/g,'&quot;') %>"
+           data-location="<%= (listing.location || '').replace(/"/g,'&quot;') %>"
+           data-price="<%= (listing.price || '') %>"
+           data-keywords="<%= (Array.isArray(listing.keywords) ? listing.keywords.join(' ') : (listing.keywords || '')) %>">
+
+          <div class="card listing-card h-100">
+            <img src="<%= listing.image && listing.image.url ? listing.image.url : listing.image %>"
+                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1764216908530-e6768d2a9ea4?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0'"
+                 class="card-img-top" alt="listingimg">
+            <div class="card-body d-flex flex-column">
+              <div>
+                <b class="listing-title-main"><%= listing.title %></b>
+              </div>
+              <div class="mt-auto">
+                <div><span class="listing-price"><%= listing.price.toLocaleString("en-IN") %></span> /night</div>
+                <div class="listing-location"><%= listing.location ? listing.location : '' %></div>
+              </div>
+            </div>
+          </div>
+
+        </a>
+      </div>
+    <% } %>
+  </div>
+
+  <div id="noResults" class="no-results">No listings match your search.</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // TAX toggle element
+  const taxSwitch = document.getElementById("switchCheckDefault");
+
+  // Helper: ensure each card has a .tax-info element (insert after .listing-price)
+  function ensureTaxInfoForAll() {
+    document.querySelectorAll('.listing-link').forEach(a => {
+      try {
+        if (!a.querySelector('.tax-info')) {
+          const priceEl = a.querySelector('.listing-price');
+          const taxEl = document.createElement('i');
+          taxEl.className = 'tax-info';
+          taxEl.style.display = 'none'; // default hidden
+          taxEl.innerHTML = '&nbsp;+18% GST';
+          if (priceEl) {
+            // insert after price element
+            priceEl.insertAdjacentElement('afterend', taxEl);
+          } else {
+            // fallback: append to card-body
+            const body = a.querySelector('.card-body') || a;
+            body.appendChild(taxEl);
+          }
+        }
+      } catch(e){}
+    });
+  }
+
+  // Ensure tax-info exists on page load
+  ensureTaxInfoForAll();
+
+  // Toggle tax display
+  if (taxSwitch) {
+    // set initial state based on current switch
+    const setAllTaxVisibility = (on) => {
+      document.querySelectorAll('.tax-info').forEach(t => t.style.display = on ? 'inline' : 'none');
+    };
+    setAllTaxVisibility(taxSwitch.checked);
+
+    taxSwitch.addEventListener('change', () => {
+      setAllTaxVisibility(taxSwitch.checked);
+    });
+  }
+
+  /* ------------------------------
+     Filters clickable (multi-select)
+     ------------------------------ */
+  const filterEls = Array.from(document.querySelectorAll('#filters .filter'));
+  const activeFilters = new Set();
+
+  function setActiveVisual(el, on){
+    if(on) el.classList.add('active'); else el.classList.remove('active');
+  }
+
+  filterEls.forEach(el => {
+    const key = (el.dataset.filter || '').toString().toLowerCase();
+    el.addEventListener('click', () => {
+      if(activeFilters.has(key)) {
+        activeFilters.delete(key);
+        setActiveVisual(el, false);
+      } else {
+        activeFilters.add(key);
+        setActiveVisual(el, true);
+      }
+      debounceRun();
+    });
+
+    el.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if(activeFilters.has(key)) {
+          activeFilters.delete(key); setActiveVisual(el,false);
+        } else {
+          activeFilters.add(key); setActiveVisual(el,true);
+        }
+        debounceRun();
+      }
+    });
+  });
+
+  /* ------------------------------
+     SEARCH & FILTER LOGIC
+     ------------------------------ */
+  const input = document.getElementById('searchInput');
+  const btn = document.getElementById('searchBtn');
+  if (!input) return; // nothing to do
+
+  function norm(s){ return String(s || '').toLowerCase().trim().replace(/\s+/g,' '); }
+  function digits(s){ return String(s || '').replace(/[^\d]/g,''); }
+
+  // Get all listing anchor nodes with their column wrapper
+  function getAllListingNodes() {
+    return Array.from(document.querySelectorAll('.listing-link')).map(a => {
+      return { anchor: a, col: a.closest('.col') || a.parentElement };
+    });
+  }
+
+  function gatherFields(anchor){
+    return {
+      title: norm(anchor.dataset.title || ''),
+      location: norm(anchor.dataset.location || ''),
+      keywords: norm(anchor.dataset.keywords || ''),
+      price: norm(anchor.dataset.price || '') || norm(anchor.querySelector('.listing-price')?.innerText || ''),
+      full: norm(anchor.innerText || ''),
+      priceDigits: digits((anchor.dataset.price || '') + ' ' + (anchor.innerText || ''))
+    };
+  }
+
+  function matchesActiveFilters(fields){
+    if(activeFilters.size === 0) return true;
+    for(let f of activeFilters){
+      if(!f) continue;
+      if( (fields.keywords && fields.keywords.indexOf(f) !== -1) ||
+          (fields.title && fields.title.indexOf(f) !== -1) ||
+          (fields.location && fields.location.indexOf(f) !== -1) ||
+          (fields.full && fields.full.indexOf(f) !== -1) ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function filterNow(){
+    // Ensure tax-info exists (in case DOM changed and new cards added)
+    ensureTaxInfoForAll();
+
+    const qRaw = norm(input.value || '');
+    const qDigits = digits(qRaw);
+    const nodes = getAllListingNodes();
+    let shown = 0;
+
+    nodes.forEach(obj => {
+      const anchor = obj.anchor;
+      const col = obj.col;
+
+      const f = gatherFields(anchor);
+
+      // search match
+      let matchSearch = false;
+      if (!qRaw) matchSearch = true;
+      else {
+        if (f.title.indexOf(qRaw) !== -1) matchSearch = true;
+        else if (f.location.indexOf(qRaw) !== -1) matchSearch = true;
+        else if (f.keywords.indexOf(qRaw) !== -1) matchSearch = true;
+        else if (f.full.indexOf(qRaw) !== -1) matchSearch = true;
+        else if (qDigits && f.priceDigits.indexOf(qDigits) !== -1) matchSearch = true;
+      }
+
+      const matchFilters = matchesActiveFilters(f);
+      const visible = matchSearch && matchFilters;
+
+      // IMPORTANT: hide/show the column wrapper so bootstrap grid reflows correctly
+      if (col) col.style.display = visible ? '' : 'none';
+      else anchor.style.display = visible ? '' : 'none';
+
+      // if tax toggle is ON, make sure .tax-info visible if card visible
+      if (taxSwitch) {
+        const taxEl = anchor.querySelector('.tax-info');
+        if (taxEl) taxEl.style.display = (visible && taxSwitch.checked) ? 'inline' : 'none';
+      }
+
+      if (visible) shown++;
+    });
+
+    const noEl = document.getElementById('noResults');
+    if (noEl) noEl.style.display = (shown === 0 ? 'block' : 'none');
+  }
+
+  // debounce
+  let timer;
+  function debounceRun(){ clearTimeout(timer); timer = setTimeout(filterNow, 150); }
+
+  input.addEventListener('input', debounceRun);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); filterNow(); } });
+  if (btn) btn.addEventListener('click', function(e){ e.preventDefault(); filterNow(); input.focus(); });
+
+  // re-run when results container changes (if server or JS updates listing DOM)
+  const resultsContainer = document.getElementById('resultsContainer');
+  if (resultsContainer) {
+    const mo = new MutationObserver(function(){ debounceRun(); });
+    mo.observe(resultsContainer, { childList: true, subtree: true });
+  }
+
+  // initial run if prefilled
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('search') || params.get('q') || '';
+    if (q) { input.value = q; filterNow(); }
+  } catch(e){}
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  const listings = document.querySelectorAll(".listing-link");
+
+  // Define available filters
+  const possibleFilters = [
+    "trending", "rooms", "iconic", "mountains", "castles",
+    "pools", "camping", "farms", "arctic", "domes", "boats"
+  ];
+
+  // Randomly assign keyword to each listing (only if not set)
+  listings.forEach(listing => {
+    if (!listing.dataset.keywords || listing.dataset.keywords.trim() === "") {
+
+      // pick random filter
+      const randomFilter = possibleFilters[Math.floor(Math.random() * possibleFilters.length)];
+
+      listing.dataset.keywords = randomFilter;
+
+      // DEBUG (optional)
+      console.log("Assigned:", randomFilter, "=>", listing.dataset.title);
+    }
+  });
+
+});
+
+</script>
