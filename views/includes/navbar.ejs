@@ -1,82 +1,145 @@
 <style>
   .nav-link{
     color: black !important; 
-  
   }
-.nav-link:hover{
-  color: #fe424d !important;
-}
-.nh{
-  font-weight: 600 !important;
-  font-size: medium;
+  .nav-link:hover{
+    color: #fe424d !important;
+  }
+  .nh{
+    font-weight: 600 !important;
+    font-size: medium;
+  }
+
+  .navbar-brand{
+    font-size: larger;
+    margin-left: 25px;
+  }
+
+  .fa-home{
+    color: black;
+  }
+  .fa-home:hover{
+    color: #fe424d;
+  }
+
+  /* ===== SEARCH ===== */
+  .search-btn{
+    color: #fe424d;
+    border: 1px solid #fe424d;
+    border-radius: 25px;
+    padding: 0 1rem;
+    background: transparent;
+    cursor: pointer;
+    margin-right: 20px !important;
+  }
+  .search-btn:hover{
+    background-color: #fe424d;
+    color: white;
+  }
+  .search-btn i{
+    margin-right: 0.5rem;
+  }
+.navbar-nav .nav-link {
+  margin-left: 0.75rem;
 }
 
-.navbar-brand{
-  font-size: larger;
-  margin-left: 25px;
-}
-.fa-home{
-  color: black;
-}
-.fa-home:hover{
-  color: #fe424d;
-}
+  .srch-ip{
+    border-radius: 25px;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+    min-width: 140px;
+    border: 1px solid #fe424d;
+  }
 
-.search-btn{
-  color: #fe424d;
-  border: 1px solid #fe424d;
-  border-radius: 25px;
-  padding: 0 1rem 0 1rem;
-  background: transparent;
-  cursor: pointer;
-  margin-right: 20px !important;
-}
-.search-btn:hover{
-  background-color: #fe424d;
-  color: white;
-}
+  @media (min-width: 992px) {
+    .srch-ip { padding: 0.5rem 3rem; min-width: 240px; }
+  }
 
-.search-btn i{
-  display: inline;
-  margin-right: 0.5rem;
-}
-.srch-ip{
-  border-radius: 25px;
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
-  min-width: 140px;
-  border: 1px solid #fe424d;
-}
+  @media (max-width: 767px) {
+    .navbar .nav-link { padding: .35rem .5rem; font-size: .95rem; }
+  }
 
-@media (min-width: 992px) {
-  .srch-ip { padding: 0.5rem 3rem; min-width: 240px; }
-}
+  /* ===== STYLISH HAMBURGER ===== */
+  .navbar-toggler {
+    border: none;
+    padding: 0;
+    margin-right: 10px;
+  }
 
-@media (max-width: 767px) {
-  .navbar .nav-link { padding: .35rem .5rem; font-size: .95rem; }
-}
+  .navbar-toggler:focus {
+    box-shadow: none;
+  }
+
+  .hamburger {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .hamburger span {
+    height: 2px;
+    width: 100%;
+    background: #fe424d;
+    border-radius: 4px;
+    transition: all 0.25s ease;
+  }
+
+  .hamburger:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+  }
+
+  /* animation when open */
+  .navbar-toggler[aria-expanded="true"] .hamburger span:nth-child(1) {
+    transform: rotate(45deg) translateY(8px);
+  }
+  .navbar-toggler[aria-expanded="true"] .hamburger span:nth-child(2) {
+    opacity: 0;
+  }
+  .navbar-toggler[aria-expanded="true"] .hamburger span:nth-child(3) {
+    transform: rotate(-45deg) translateY(-8px);
+  }
 </style>
 
 <nav class="navbar navbar-expand-lg bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
+
     <a class="navbar-brand" href="/listings">
-      <i class="fa-solid fa-ship" style="display: flex; margin-top: 20px;"><p class="ln"> &nbsp;Nestara</p></i>
+      <i class="fa-solid fa-ship" style="display:flex; margin-top:20px;">
+        <p class="ln">&nbsp;Nestara</p>
+      </i>
     </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
-      <span class="navbar-toggler-icon"></span>
+    <!-- STYLISH TOGGLER -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link el" href="/listings" style="margin-left: 140px !important; margin-top: 6px !important; font-size: larger; font-weight: 500 !important;">
-  Explore 
-
-        </a>
-      </div>
 
       <!-- SEARCH -->
-      <div class="navbar-nav ms-auto">
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <div class="navbar-nav ms-auto">
         <form class="d-flex" role="search" onsubmit="return false;">
           <input
             id="searchInput"
@@ -84,36 +147,46 @@
             type="search"
             placeholder="Search Destinations"
           />
-          <button
-            id="searchBtn"
-            class="btn search-btn"
-            type="button"
-          >
+          <button id="searchBtn" class="btn search-btn" type="button">
             <i class="fa-solid fa-magnifying-glass"></i>Search
           </button>
         </form>
       </div>
 
-      <!-- AUTH LINKS -->
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link nh" href="/listings/new">
-          <i class="fa-solid fa-home"></i>&nbsp;&nbsp;Nestara your home
-        </a>
+    
 
-        <% if (typeof currUser === "undefined" || !currUser) { %>
-          <a class="nav-link" href="/signup">
-            <i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;<b>Signup</b>
-          </a>
-          <a class="nav-link" href="/accessacc">
-            <i class="fa-solid fa-user"></i>&nbsp;&nbsp;<b>Login</b>
-          </a>
-        <% } else { %>
-          <a class="nav-link" href="/logout">
-            <b>Logout</b>&nbsp;&nbsp;
-            <i class="fa-solid fa-right-from-bracket"></i>
-          </a>
-        <% } %>
-      </div>
+     <!-- AUTH + EXPLORE LINKS (RIGHT SIDE) -->
+<div class="navbar-nav ms-auto">
+
+  <!-- EXPLORE (NOW HERE) -->
+  <a class="nav-link el"
+     href="/listings"
+     style="font-size:medium; font-weight:500;"><i class="fa-solid fa-window-maximize"></i>
+    Explore
+  </a>
+
+  <!-- NESTARA YOUR HOME -->
+  <a class="nav-link nh" href="/listings/new">
+    <i class="fa-solid fa-home"></i>Nestara your home
+  </a>
+
+  <% if (typeof currUser === "undefined" || !currUser) { %>
+    <a class="nav-link" href="/signup">
+      <i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;<b>Signup</b>
+    </a>
+    <a class="nav-link" href="/accessacc">
+      <i class="fa-solid fa-user"></i>&nbsp;&nbsp;<b>Login</b>
+    </a>
+  <% } else { %>
+    <a class="nav-link" href="/logout">
+      <b>Logout</b>&nbsp;
+      <i class="fa-solid fa-right-from-bracket"></i>
+    </a>
+  <% } %>
+
+</div>
+
+
     </div>
   </div>
 </nav>
@@ -128,16 +201,14 @@
     searchInput.addEventListener('keydown', function(e){
       if (e.key === 'Enter') {
         e.preventDefault();
-        const ev = new Event('input', { bubbles: true });
-        searchInput.dispatchEvent(ev);
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
       }
     });
 
     if (searchBtn) {
       searchBtn.addEventListener('click', function(e){
         e.preventDefault();
-        const ev = new Event('input', { bubbles: true });
-        searchInput.dispatchEvent(ev);
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
         searchInput.focus();
       });
     }

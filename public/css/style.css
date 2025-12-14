@@ -871,3 +871,118 @@ textarea {
     gap: 20px;
   }
 }
+
+/* ================= FILTER BAR ================= */
+
+/* Desktop */
+.filters {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ================= MOBILE FIX ================= */
+@media (max-width: 768px) {
+  .filters {
+    flex-wrap: nowrap;           /* ek hi line */
+    overflow-x: auto;            /* left-right scroll */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;       /* Firefox */
+    padding-bottom: 6px;
+  }
+
+  .filters::-webkit-scrollbar {
+    display: none;               /* Chrome/Safari */
+  }
+
+  .filters > * {
+    flex: 0 0 auto;              /* sab items visible */
+    white-space: nowrap;
+  }
+}
+/* FILTER BAR */
+.filters {
+  display: flex;
+  gap: 16px;
+  padding: 10px 12px;
+}
+
+/* INDIVIDUAL FILTER */
+.filter {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+ 
+
+  .filter {
+    flex: 0 0 auto;   /* ⭐ MOST IMPORTANT LINE */
+  }
+}
+
+.filters::-webkit-scrollbar {
+  height: 4px;
+}
+
+.filters::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.filters::-webkit-scrollbar-track {
+  background: transparent;
+}
+/* ===== SHOW PAGE IMAGE FIX (MOBILE) ===== */
+.show-img {
+  width: 100vh;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Mobile view special handling */
+@media (max-width: 576px) {
+  .show-img {
+    width: 100vw;              /* 🔥 full phone width */
+    max-width: 100vw;
+    margin-left: -0.75rem;     /* 🔥 remove side padding */
+    margin-right: -0.75rem;
+    border-radius: 0;          /* clean edge-to-edge look */
+  }
+}
+
+/* text block under image */
+.show-card .card-body {
+  padding: 1rem;
+}
+
+/* mobile: text bhi image ke width ke saath align */
+@media (max-width: 576px) {
+  .show-card .card-body {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+.show-card {
+  border: none;
+}
+
+@media (max-width: 576px) {
+  .show-card {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}

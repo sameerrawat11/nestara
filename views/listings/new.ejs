@@ -1,49 +1,162 @@
 <% layout("/layouts/boilerplate") %>
 
+<style>
+  /* ===== CREATE LISTING STYLING ===== */
+
+  .listing-form-container {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  .listing-title {
+    text-align: center;
+    color: #fe424d;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+
+  /* inputs */
+  .form-control,
+  textarea {
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .add-btn {
+    padding: 0.55rem 1.8rem;
+    border-radius: 25px;
+  }
+
+  /* ===== MOBILE FIX ===== */
+  @media (max-width: 576px) {
+
+    /* remove bootstrap narrow column */
+    .col-8,
+    .offset-2 {
+      width: 100% !important;
+      margin-left: 0 !important;
+    }
+
+    .listing-form-container {
+      padding: 1.2rem 1rem;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    /* inputs readable */
+    .form-control,
+    textarea {
+      font-size: 1rem;
+    }
+
+    /* button full width */
+    .add-btn {
+      width: 100%;
+    }
+  }
+</style>
+
 <div class="row">
-  <div class="col-8 offset-2"><br><br>
+  <div class="col-8 offset-2">
+    <br><br>
+
     <div class="listing-form-container">
-    <h2 class="listing-title">Create a New Listing</h2><br>
+      <h2 class="listing-title">Create a New Listing</h2>
 
-    <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
-      <!-- title, desc, image etc -->
-      <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <input name="listing[title]" placeholder="enter the Title" type="text" class="form-control" required>
-      </div>
+      <form
+        action="/listings"
+        method="POST"
+        novalidate
+        class="needs-validation"
+        enctype="multipart/form-data"
+      >
 
-      <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea name="listing[description]" placeholder="enter the Description" class="form-control" required></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label for="image" class="form-label">Upload Listing Image</label>
-        <input name="listing[image]" class="form-control" type="file" required>
-      </div>
-
-      <div class="row">
-        <div class="mb-3 col-md-4">
-          <label for="price" class="form-label">Price</label>
-          <input name="listing[price]" class="form-control" required>
+        <!-- TITLE -->
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input
+            name="listing[title]"
+            placeholder="Enter the title"
+            type="text"
+            class="form-control"
+            required
+          >
         </div>
 
-        <div class="mb-3 col-md-8">
-          <label for="Country" class="form-label">Country</label>
-          <input name="listing[country]" class="form-control" placeholder="enter the Country" type="text" required>
+        <!-- DESCRIPTION -->
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea
+            name="listing[description]"
+            placeholder="Enter the description"
+            class="form-control"
+            rows="4"
+            required
+          ></textarea>
         </div>
-      </div>
 
-      <div class="mb-3">
-        <label for="Location" class="form-label">Location (address)</label>
-        <input id="search-address" name="listing[location]" placeholder="Search address or type location" class="form-control" type="text" required>
-        <ul id="search-results" class="list-group mt-1"></ul>
-      </div>
+        <!-- IMAGE -->
+        <div class="mb-3">
+          <label class="form-label">Upload Listing Image</label>
+          <input
+            name="listing[image]"
+            class="form-control"
+            type="file"
+            required
+          >
+        </div>
 
-     
+        <!-- PRICE + COUNTRY -->
+        <div class="row">
+          <div class="mb-3 col-md-4">
+            <label class="form-label">Price</label>
+            <input
+              name="listing[price]"
+              class="form-control"
+              type="number"
+              placeholder="Enter price"
+              required
+            >
+          </div>
 
-      <button class="btn btn-dark add-btn mt-3">Add</button>
-    </form>
+          <div class="mb-3 col-md-8">
+            <label class="form-label">Country</label>
+            <input
+              name="listing[country]"
+              class="form-control"
+              placeholder="Enter the country"
+              type="text"
+              required
+            >
+          </div>
+        </div>
+
+        <!-- LOCATION -->
+        <div class="mb-3">
+          <label class="form-label">Location (address)</label>
+          <input
+            id="search-address"
+            name="listing[location]"
+            placeholder="Search address or type location"
+            class="form-control"
+            type="text"
+            required
+          >
+          <ul id="search-results" class="list-group mt-1"></ul>
+        </div>
+
+        <!-- SUBMIT -->
+        <button class="btn btn-dark add-btn mt-3">Add</button>
+
+      </form>
+    </div>
   </div>
-</div></div>
+</div>
+
 <script src="/js/map.js"></script>
