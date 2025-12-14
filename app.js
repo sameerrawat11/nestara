@@ -28,16 +28,20 @@ const dbUrl = process.env.ATLASDB_URL;
 
 mongoose.set("strictQuery", false);
 
-async function connectDB() {
+async function connectDBAndStartServer() {
   try {
     await mongoose.connect(dbUrl, {
       serverSelectionTimeoutMS: 30000,
     });
 
     console.log("Mongo connected ✅");
-    console.log("DB state:", mongoose.connection.readyState); // must be 1
+    console.log("DB state:", mongoose.connection.readyState); // MUST be 1
 
-    startServer(); // ✅ server only starts AFTER DB connects
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT} 🚀`);
+    });
+
   } catch (err) {
     console.error("Mongo connection failed ❌", err);
     process.exit(1);
@@ -58,19 +62,18 @@ app.locals.MAP_TOKEN = process.env.MAP_TOKEN || "";
 
 // ================= SESSION STORE =================
 const store = MongoStore.create({
-  mongoUrl: process.env.ATLASDB_URL,
+  mongoUrl: dbUrl,
   touchAfter: 24 * 3600,
 });
 
-store.on("error", function (e) {
+store.on("error", (e) => {
   console.log("SESSION STORE ERROR ❌", e);
 });
-
 
 const sessionConfig = {
   store,
   name: "nestara-session",
-  secret: process.env.SECRET,
+  secret: process.env.SECRET || "devsecret",
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -80,7 +83,6 @@ const sessionConfig = {
 };
 
 app.use(session(sessionConfig));
-
 app.use(flash());
 
 // ================= PASSPORT =================
@@ -115,12 +117,5 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error.ejs", { message });
 });
 
-// ================= SERVER =================
-function startServer() {
-  const PORT = 8080;
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT} 🚀`);
-  });
-}
-
-connectDB();
+// ================= START APP =================
+connectDBAndStartServer();
