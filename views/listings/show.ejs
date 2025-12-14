@@ -81,7 +81,7 @@
 
 <!-- MAP: set globals first, then load Mapbox and your map script -->
  <p style="font-size: x-large; font-weight: 600;text-align: center;">Discover where this place is located&nbsp;&nbsp;<i class="fa-solid fa-map"></i></p>
-<div id="map" style="height: 300px; width: 80rem; "></div>
+<div id="map" class="map-container"></div>
 
 <script>
   // inject server token and coords before loading map.js
@@ -98,25 +98,98 @@
 
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.17.0/mapbox-gl.js"></script>
 <script src="/js/map.js"></script>
-
 <% if (listing.reviews && listing.reviews.length > 0) { %>
-  <div class="row">
-    <div class="col-12" style="font-size: x-large;"><p><b>All Reviews</b></p></div>
+
+  <!-- ===== DESKTOP VIEW ===== -->
+  <div class="row d-none d-md-flex">
+    <div class="col-12 mb-3">
+      <p class="fs-4 fw-bold">All Reviews</p>
+    </div>
+
     <% for (let review of listing.reviews) { %>
-      <div class="card col-3 ms-3 mb-3">
- <div class="card-body ">
-     <h5 class="card-title">@<%= review.author && review.author.username ? review.author.username : "User" %></h5>
-          <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
-          <p class="card-text"><%= review.comment %></p>
+      <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card review-card h-100">
+          <div class="card-body">
+            <h6 class="fw-bold">@<%= review.author?.username || "User" %></h6>
+            <p class="starability-result" data-rating="<%= review.rating %>"></p>
+            <p class="small"><%= review.comment %></p>
+
+            <% if (currUser && review.author && String(currUser._id) === String(review.author._id)) { %>
+              <form method="POST"
+                action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                <button class="btn btn-outline-danger btn-sm w-100">
+                  Delete
+                </button>
+              </form>
+            <% } %>
+          </div>
         </div>
-        <% if (currUser && review.author && String(currUser._id) === String(review.author._id)) { %>
-          <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" class="mb-3">
-            <button class="btn btn-sm btn-dark">Delete</button>
-          </form>
-        <% } %>
       </div>
     <% } %>
-   
   </div>
-  
+
+  <!-- ===== MOBILE VIEW (CAROUSEL) ===== -->
+  <div class="d-md-none">
+    <p class="fs-4 fw-bold mb-3">All Reviews</p>
+
+    <div id="reviewCarousel" class="carousel slide">
+      <div class="carousel-inner">
+
+        <% listing.reviews.forEach((review, index) => { %>
+          <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+            <div class="review-swipe-card"
+                 data-review-id="<%= review._id %>">
+
+              <div class="review-content">
+                <h6 class="fw-bold">@<%= review.author?.username || "User" %></h6>
+                <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                <p class="small"><%= review.comment %></p>
+
+                <% if (currUser && review.author && String(currUser._id) === String(review.author._id)) { %>
+                  <form method="POST"
+                    action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+                    class="delete-form">
+                    <button class="btn btn-danger btn-sm w-100 mt-2">
+                      Delete
+                    </button>
+                  </form>
+                <% } %>
+              </div>
+
+            </div>
+          </div>
+        <% }) %>
+
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#reviewCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </div>
+
 <% } %>
+
+<script>document.querySelectorAll(".review-swipe-card").forEach(card => {
+  let startX = 0;
+
+  card.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+  });
+
+  card.addEventListener("touchmove", e => {
+    const diffX = e.touches[0].clientX - startX;
+
+    if (diffX < -60) {
+      card.classList.add("swiped");
+    }
+
+    if (diffX > 60) {
+      card.classList.remove("swiped");
+    }
+  });
+});
+</script>
