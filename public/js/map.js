@@ -2,94 +2,150 @@
 (function () {
   try {
     const token = window.MAP_TOKEN;
-    let coords = window.LISTING_COORDS;
+    const coords = window.LISTING_COORDS;
 
     if (!token) {
-      console.error(
-        "MAP_TOKEN missing. Inject it in EJS before loading map.js"
-      );
+      console.error("❌ MAP_TOKEN missing");
       return;
     }
+
     mapboxgl.accessToken = token;
 
-    // Normalize coords: allow strings, [lat,lng] flips, null fallback
+    // ---------- helper: normalize coordinates ----------
     function toValidLngLat(a) {
       if (!Array.isArray(a) || a.length !== 2) return null;
-      // convert strings to numbers
       const x = parseFloat(a[0]);
       const y = parseFloat(a[1]);
       if (!isFinite(x) || !isFinite(y)) return null;
-      // Heuristic: if looks like [lat, lng] (lat between -90..90, lng maybe >90) then flip
-      if (
-        Math.abs(x) <= 90 &&
-        Math.abs(y) <= 180 &&
-        Math.abs(x) <= 90 &&
-        Math.abs(y) <= 180
-      ) {
-        // ambiguous — assume input is [lng, lat] normally. But detect common swap:
-        if (Math.abs(x) <= 90 && Math.abs(y) > 90) {
-          // swapped -> flip
-          return [y, x];
-        }
-      }
-      // If after parse values are within lng/lat bounds, assume [lng, lat]
+
+      // lng, lat
       if (Math.abs(x) <= 180 && Math.abs(y) <= 90) return [x, y];
-      // try flipping
+      // lat, lng → swap
       if (Math.abs(y) <= 180 && Math.abs(x) <= 90) return [y, x];
       return null;
     }
 
-    let lnglat = toValidLngLat(coords);
-    if (!lnglat) {
-      console.warn(
-        "LISTING_COORDS invalid or missing:",
-        coords,
-        "→ using fallback [77.2090,28.6139]"
-      );
-      lnglat = [77.209, 28.6139];
-    }
+    // ---------- destination ----------
+    const destination = toValidLngLat(coords) || [77.2090, 28.6139];
 
+    // ---------- map init ----------
     const map = new mapboxgl.Map({
       container: "map",
       style: "mapbox://styles/mapbox/streets-v11",
-      center: lnglat,
-      zoom: 9,
+      center: destination,
+      zoom: 10,
     });
 
-map.addControl(new mapboxgl.NavigationControl());
+    map.addControl(new mapboxgl.NavigationControl());
 
-    // expose for debugging
-    window._map = map;
-    window._lnglat = lnglat;
-
+    // ---------- destination marker ----------
     map.on("load", () => {
-      try {
-        new mapboxgl.Marker({ color: "red" })
-          .setLngLat(lnglat)
-          .setPopup(
-            new mapboxgl.Popup({ offset: 25 }).setHTML(`<h3>${listing.title}</h3><P>Exact Location will be Provided after Booking!</P>`))
-          .addTo(map);
-      } catch (err) {
-        console.error("Marker error:", err, "lnglat=", lnglat);
-      }
-      map.resize();
-      console.log("Map loaded successfully. center=", map.getCenter());
+      new mapboxgl.Marker({ color: "red" })
+        .setLngLat(destination)
+        .setPopup(
+          new mapboxgl.Popup().setHTML(
+            `<h6>Destination</h6><p>Exact location after booking</p>`
+          )
+        )
+        .addTo(map);
     });
 
-    map.on("error", (e) => {
-      console.error("Mapbox error event:", e);
+    // ---------- geocode user input ----------
+    async function geocodePlace(place) {
+      const res = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          place
+        )}.json?access_token=${token}`
+      );
+      const data = await res.json();
+      return data.features?.[0]?.center || null;
+    }
+
+    const btn = document.getElementById("getDirections");
+    const inputEl = document.getElementById("userLocationInput");
+    const infoEl = document.getElementById("routeInfo");
+
+    if (!btn || !inputEl || !infoEl) return;
+
+    let userMarker = null;
+
+    // ---------- button click ----------
+    btn.addEventListener("click", async () => {
+      const input = inputEl.value.trim();
+      if (!input) {
+        alert("Please enter your location");
+        return;
+      }
+
+      const userCoords = await geocodePlace(input);
+      if (!userCoords) {
+        alert("Location not found");
+        return;
+      }
+
+      // remove old user marker
+      if (userMarker) userMarker.remove();
+
+      userMarker = new mapboxgl.Marker({ color: "blue" })
+        .setLngLat(userCoords)
+        .setPopup(new mapboxgl.Popup().setText("Your Location"))
+        .addTo(map);
+
+      // ---------- Directions API ----------
+      const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${userCoords[0]},${userCoords[1]};${destination[0]},${destination[1]}?geometries=geojson&overview=full&access_token=${token}`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+      const route = data.routes?.[0];
+
+      if (!route) {
+        alert("Route not found");
+        return;
+      }
+
+      // remove old route
+      if (map.getSource("route")) {
+        map.removeLayer("route-line");
+        map.removeSource("route");
+      }
+
+      // add route source
+      map.addSource("route", {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          geometry: route.geometry,
+        },
+      });
+
+      // add route layer
+      map.addLayer({
+        id: "route-line",
+        type: "line",
+        source: "route",
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+        paint: {
+          "line-color": "#0d6efd",
+          "line-width": 5,
+        },
+      });
+
+      // ---------- fit map to route ----------
+      const bounds = new mapboxgl.LngLatBounds();
+      route.geometry.coordinates.forEach((c) => bounds.extend(c));
+      map.fitBounds(bounds, { padding: 60 });
+
+      // ---------- distance & time ----------
+      const km = (route.distance / 1000).toFixed(2);
+      const min = Math.round(route.duration / 60);
+
+      infoEl.innerHTML = `🚗 Distance: <b>${km} km</b> &nbsp;&nbsp; ⏱️ Time: <b>${min} min</b>`;
+      infoEl.classList.add("active");
     });
-  } catch (e) {
-    console.error("map.js top-level error:", e);
+  } catch (err) {
+    console.error("❌ map.js error:", err);
   }
 })();
-const nearby = [
-  [lng + 0.01, lat + 0.01],
-  [lng - 0.01, lat - 0.01]
-];
-
-nearby.forEach(coord => {
-  new mapboxgl.Marker({ color: "blue" })
-    .setLngLat(coord)
-    .addTo(map);
-});

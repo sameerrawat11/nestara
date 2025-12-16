@@ -1066,3 +1066,53 @@ textarea {
     height: 180px;
   }
 }
+/* ===============================
+   MAP OVERLAYS (Google Maps style)
+   =============================== */
+
+#map {
+  position: relative;
+}
+
+/* Common overlay box */
+.map-overlay {
+  position: absolute;
+  z-index: 10;
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* Top-left overlay (search) */
+.map-overlay-top {
+  top: 12px;
+  left: 12px;
+  width: 260px;
+}
+
+/* Bottom overlay (distance/time) */
+.map-overlay-bottom {
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  display: none; /* route ke baad hi dikhe */
+}
+
+/* Show route info once available */
+.map-overlay-bottom.active {
+  display: block;
+}
+
+/* Mobile adjustments */
+@media (max-width: 576px) {
+  .map-overlay-top {
+    width: calc(100% - 24px);
+    left: 12px;
+    right: 12px;
+  }
+}
+

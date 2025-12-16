@@ -147,7 +147,7 @@
             type="search"
             placeholder="Search Destinations"
           />
-          <button id="searchBtn" class="btn search-btn" type="button">
+          <button id="searchBtn" class="btn search-btn" type="button" style="font-weight: 500;">
             <i class="fa-solid fa-magnifying-glass"></i>Search
           </button>
         </form>
@@ -161,26 +161,20 @@
   <!-- EXPLORE (NOW HERE) -->
   <a class="nav-link el"
      href="/listings"
-     style="font-size:medium; font-weight:500;"><i class="fa-solid fa-window-maximize"></i>
-    Explore
-  </a>
+     style="font-size:medium; font-weight:500;"><i class="fa-solid fa-window-maximize">&nbsp;</i>Explore</a>
 
   <!-- NESTARA YOUR HOME -->
   <a class="nav-link nh" href="/listings/new">
-    <i class="fa-solid fa-home"></i>Nestara your home
-  </a>
+    <i class="fa-solid fa-home">&nbsp;</i>Nestara your home</a>
 
   <% if (typeof currUser === "undefined" || !currUser) { %>
     <a class="nav-link" href="/signup">
-      <i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;<b>Signup</b>
-    </a>
+      <i class="fa-solid fa-user-plus"></i>&nbsp;<b>Signup</b></a>
     <a class="nav-link" href="/accessacc">
-      <i class="fa-solid fa-user"></i>&nbsp;&nbsp;<b>Login</b>
-    </a>
+      <i class="fa-solid fa-user"></i>&nbsp;<b>Login</b></a>
   <% } else { %>
     <a class="nav-link" href="/logout">
-      <i class="fa-solid fa-right-from-bracket"></i>&nbsp;
-      <b>Logout</b>
+      <i class="fa-solid fa-right-from-bracket"></i>&nbsp;<b>Logout</b>
       
     </a>
   <% } %>

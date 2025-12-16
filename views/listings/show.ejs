@@ -8,7 +8,8 @@
      Otherwise keep it (but don't include Leaflet twice). -->
 
 <div class="row mt-3">
-  <div class="col-12">
+  <div class="col-12 offset-3" style="  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+ font-weight: bolder; font-size: x-large !important;">
     <h3><%= listing.title %></h3>
   </div>
 
@@ -19,12 +20,12 @@
       alt="listingimg"
       onerror="this.style.display='none'"
     />
-    <div class="card-body">
-      <p class="card-text"><i>Owned by <%= listing.owner ? listing.owner.username : "Unknown" %></i></p>
-      <p class="card-text"><%= listing.description %></p>
-      <p class="card-text">&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %></p>
-      <p class="card-text"><%= listing.location || "" %></p>
-      <p class="card-text"><%= listing.country || "" %></p>
+    <div class="card-body" style="color: black;">
+      <p class="card-text" style="color: black;"><i>Belongs to <%= listing.owner ? listing.owner.username : "Unknown" %></i></p>
+      <p class="card-text" style="color: black;"><%= listing.description %></p>
+      <p class="card-text" style="color: black;"><i class="fa-solid fa-indian-rupee-sign"></i>&nbsp;&nbsp;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %></p>
+      <p class="card-text" style="color: black;"><i class="fa-solid fa-map-location"></i>&nbsp;&nbsp;<%= listing.location || "" %></p>
+      <p class="card-text" style="color: black;"><i class="fa-solid fa-earth-americas"></i>&nbsp;&nbsp;<%= listing.country || "" %></p>
     </div>
   </div>
 </div>
@@ -43,7 +44,7 @@
 <div class="col-8 offset-2 mb-3">
   <% if (currUser) { %>
     <hr>
-    <h4>Leave your Reviews</h4>
+    <h4>Your opinion matters—share it!</h4>
     <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
       <div class="mb-3 mt-3">
         <label for="rating" class="form-label">Rating</label>
@@ -62,7 +63,7 @@
       </div>
 
       <div class="mb-3 mt-3">
-        <label for="comment" class="form-label">Comments</label>
+        <label for="comment" class="form-label">Add Feedback</label>
         <textarea name="review[comment]" required class="form-control" id="comment" cols="30" rows="4"></textarea>
         <div class="invalid-feedback">Please leave a comment</div>
       </div>
@@ -81,7 +82,28 @@
 
 <!-- MAP: set globals first, then load Mapbox and your map script -->
  <p style="font-size: x-large; font-weight: 600;text-align: center;">Discover where this place is located&nbsp;&nbsp;<i class="fa-solid fa-map"></i></p>
-<div id="map" class="map-container"></div>
+ 
+<div id="map" class="map-container">
+<div class="map-overlay map-overlay-top">
+    <label class="fw-semibold small mb-1">Your location</label>
+
+    <input
+      type="text"
+      id="userLocationInput"
+      class="form-control form-control-sm"
+      placeholder="Enter city / place / landmark"
+    />
+
+    <button id="getDirections" class="btn btn-sm btn-dark mt-2 w-100">
+      📍 Get Directions
+    </button>
+  </div>
+
+  <!-- 📏 BOTTOM OVERLAY (KM + TIME) -->
+  <div id="routeInfo" class="map-overlay map-overlay-bottom"></div>
+
+</div>
+
 
 <script>
   // inject server token and coords before loading map.js
@@ -103,7 +125,7 @@
   <!-- ===== DESKTOP VIEW ===== -->
   <div class="row d-none d-md-flex">
     <div class="col-12 mb-3">
-      <p class="fs-4 fw-bold">All Reviews</p>
+      <p class="fs-4 fw-bold">Verified Reviews</p>
     </div>
 
     <% for (let review of listing.reviews) { %>
@@ -193,3 +215,4 @@
   });
 });
 </script>
+
