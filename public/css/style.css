@@ -1115,4 +1115,53 @@ textarea {
     right: 12px;
   }
 }
+/* Desktop default (no change needed) */
+.listing-title {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Mobile view fix */
+@media (max-width: 768px) {
+  .listing-title {
+    margin-left: 0;        /* left se start */
+    margin-right: 0;
+    padding-left: 12px;    /* thoda spacing (optional but looks good) */
+    text-align: left;
+  }
+}
+
+/* ===== SHOW PAGE TITLE FIX ===== */
+
+/* Desktop: no change */
+.show-title {
+  text-align: center;
+}
+
+/* Mobile only */
+@media (max-width: 768px) {
+  .show-title {
+    margin-left: 0 !important;
+    padding-left: 12px;
+    text-align: left;
+  }
+
+  /* Bootstrap offset override */
+  .show-title.col-12.offset-3 {
+    margin-left: 0 !important;
+  }
+}
+
+/* Desktop default */
+.show-title h3 {
+  text-align: center;
+}
+
+/* Mobile only */
+@media (max-width: 767px) {
+  .show-title h3 {
+    text-align: left;
+    padding-left: 12px;
+  }
+}
 
